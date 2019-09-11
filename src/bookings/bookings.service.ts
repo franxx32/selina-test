@@ -12,11 +12,10 @@ export class BookingsService {
   ) {}
 
   create(createBookingDto: CreateBookingDto) {
-    const { startDate, endDate, locationId, roomId } = createBookingDto;
+    const { startDate, endDate, roomId } = createBookingDto;
     this.bookingsRepository.save({
       startDate,
       endDate,
-      location: locationId,
       room: roomId,
     });
   }

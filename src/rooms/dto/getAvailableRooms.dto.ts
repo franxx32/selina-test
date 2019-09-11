@@ -2,8 +2,8 @@ import { IsDateString } from 'class-validator';
 
 export class GetAvailableRoomsDto {
   @IsDateString()
-  startDate: string;
+  startDate: Date;
 
   @IsDateString()
-  endDate: string;
+  endDate: Date;
 }

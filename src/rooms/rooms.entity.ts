@@ -8,9 +8,9 @@ import {
 import { Locations } from 'src/locations/locations.entity';
 import { Bookings } from 'src/bookings/bookings.entity';
 export enum RoomTypes {
-  Dorm,
-  Private,
-  Deluxe,
+  Dorm = 'Dorm',
+  Private = 'Private',
+  Deluxe = 'Deluxe',
 }
 
 @Entity()
