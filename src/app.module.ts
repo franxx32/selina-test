@@ -4,25 +4,15 @@ import { AppService } from './app.service';
 import { RoomsModule } from './rooms/rooms.module';
 import { LocationsModule } from './locations/locations.module';
 import { Routes, RouterModule } from 'nest-router';
-
-const routes: Routes = [
-  {
-    path: '/locations/:id',
-    module: LocationsModule,
-    children: [
-      {
-        path: '/rooms',
-        module: RoomsModule,
-      },
-    ],
-  },
-];
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
-    RouterModule.forRoutes(routes), // setup the routes
+    TypeOrmModule.forRoot(),
     RoomsModule,
     LocationsModule,
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

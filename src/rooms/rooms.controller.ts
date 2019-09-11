@@ -1,14 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
+import { GetAvailableRoomsDto } from './dto/getAvailableRooms.dto';
+import { ValidationPipe } from './room.pipe';
 
-@Controller()
+@Controller('locations/:locationId')
 export class RoomsController {
-  @Get()
-  public getLocations() {
-    return 'Tututut';
-  }
-
-  @Get(':id')
-  public getRoom() {
-    return 'Room';
+  @Get('rooms')
+  public getAvailableRooms(
+    @Param(ValidationPipe) params,
+    @Query() getAvailableRoomsDto: GetAvailableRoomsDto,
+  ) {
+    console.log(getAvailableRoomsDto);
+    return 'AWeSOmewewew';
   }
 }

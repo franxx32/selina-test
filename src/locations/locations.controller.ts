@@ -1,14 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Req } from '@nestjs/common';
+import { LocationsService } from './locations.service';
 
-@Controller()
+@Controller('locations')
 export class LocationsController {
+  constructor(private readonly locationsService: LocationsService) {}
   @Get()
   public getLocations() {
-    return 'Tututut';
-  }
-
-  @Get(':id')
-  public getLocation() {
-    return 'first loc';
+    return this.locationsService.findAll();
   }
 }
