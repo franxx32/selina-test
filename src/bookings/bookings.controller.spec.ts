@@ -1,9 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BookingsController } from './bookings.controller';
 import { BookingsService } from './bookings.service';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Bookings } from './bookings.entity';
-import { Repository } from 'typeorm';
+
+const MockRepository = jest.fn().mockImplementation();
+const mockRepository = new MockRepository();
 
 describe('Bookings Controller', () => {
   let controller: BookingsController;
@@ -12,8 +14,13 @@ describe('Bookings Controller', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BookingsController],
-      imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Bookings])],
-      providers: [BookingsService],
+      providers: [
+        BookingsService,
+        {
+          provide: getRepositoryToken(Bookings),
+          useValue: mockRepository,
+        },
+      ],
     }).compile();
 
     service = module.get<BookingsService>(BookingsService);

@@ -3,7 +3,7 @@ import { Repository, getManager } from 'typeorm';
 import { Bookings } from './bookings.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookingDto } from './dto/createBooking.dto';
-import { Rooms } from 'src/rooms/rooms.entity';
+import { Rooms } from '../rooms/rooms.entity';
 
 @Injectable()
 export class BookingsService {

@@ -5,7 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { LocationsService } from 'src/locations/locations.service';
+import { LocationsService } from '../locations/locations.service';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {

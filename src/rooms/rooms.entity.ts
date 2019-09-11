@@ -5,8 +5,8 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Locations } from 'src/locations/locations.entity';
-import { Bookings } from 'src/bookings/bookings.entity';
+import { Locations } from '../locations/locations.entity';
+import { Bookings } from '../bookings/bookings.entity';
 export enum RoomTypes {
   Dorm = 'Dorm',
   Private = 'Private',
@@ -28,8 +28,8 @@ export class Rooms {
   price: number;
 
   @ManyToOne(type => Locations, location => location.rooms)
-  location: number;
+  location?: number;
 
   @OneToMany(type => Bookings, booking => booking.id)
-  bookings: Bookings[];
+  bookings?: Bookings[];
 }

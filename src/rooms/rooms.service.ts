@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Rooms, RoomTypes } from './rooms.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
-import { Bookings } from 'src/bookings/bookings.entity';
 import { GetAvailableRoomsDto } from './dto/getAvailableRooms.dto';
+import { Bookings } from '../bookings/bookings.entity';
 
 @Injectable()
 export class RoomsService {
@@ -12,11 +12,11 @@ export class RoomsService {
     private readonly roomsRepository: Repository<Rooms>,
   ) {}
 
-  async getAvailableRoom(
+  async getAvailableRooms(
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
-    const availableRooms = await this.getAvailableRooms(
+    const availableRooms = await this.resolveAvailableRooms(
       locationId,
       getAvailableRoomsDto,
     );
@@ -24,7 +24,7 @@ export class RoomsService {
     return availableRooms;
   }
 
-  private async getAvailableRooms(
+  private async resolveAvailableRooms(
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {

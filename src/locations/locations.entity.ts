@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Rooms } from 'src/rooms/rooms.entity';
+import { Rooms } from '../rooms/rooms.entity';
 
 @Entity()
 export class Locations {
@@ -13,5 +13,5 @@ export class Locations {
   destination: string;
 
   @OneToMany(type => Rooms, room => room.id)
-  rooms: Rooms[];
+  rooms?: Rooms[];
 }
