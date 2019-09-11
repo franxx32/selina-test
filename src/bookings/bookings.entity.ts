@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Locations } from 'src/locations/locations.entity';
 import { Rooms } from 'src/rooms/rooms.entity';
 
 @Entity()

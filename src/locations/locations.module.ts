@@ -10,8 +10,4 @@ import { LocationsService } from './locations.service';
   providers: [LocationsService],
   exports: [LocationsService],
 })
-export class LocationsModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(LocationMiddleware).forRoutes('/locations/*/');
-  // }
-}
+export class LocationsModule {}

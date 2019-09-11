@@ -5,8 +5,8 @@ export class CreateBookingDto {
   roomId: number;
 
   @IsDateString()
-  startDate: string;
+  startDate: Date;
 
   @IsDateString()
-  endDate: string;
+  endDate: Date;
 }

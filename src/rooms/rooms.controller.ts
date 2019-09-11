@@ -13,8 +13,6 @@ export class RoomsController {
     @Query() getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
     const { locationId } = params;
-    console.log(getAvailableRoomsDto);
-
     return this.roomsService.getAvailableRoom(locationId, getAvailableRoomsDto);
   }
 }

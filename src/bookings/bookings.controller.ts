@@ -1,5 +1,4 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { create } from 'domain';
 import { CreateBookingDto } from './dto/createBooking.dto';
 import { BookingsService } from './bookings.service';
 

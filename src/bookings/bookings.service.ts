@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Repository, getManager } from 'typeorm';
 import { Bookings } from './bookings.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookingDto } from './dto/createBooking.dto';
@@ -13,10 +13,32 @@ export class BookingsService {
 
   create(createBookingDto: CreateBookingDto) {
     const { startDate, endDate, roomId } = createBookingDto;
-    this.bookingsRepository.save({
-      startDate,
-      endDate,
-      room: roomId,
+    return this.bookingsRepository.manager.transaction(async tr => {
+      const room = await tr.query(
+        this.getFullRoomQuery(roomId, startDate, endDate),
+      );
+      if (room.length) {
+        throw new HttpException(
+          'This room is no longer available',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const booking = new Bookings();
+      booking.room = roomId;
+      booking.startDate = startDate;
+      booking.endDate = endDate;
+
+      const savedRoom = await tr.save(booking);
+      return savedRoom;
     });
+  }
+
+  private getFullRoomQuery(roomId: number, startDate: Date, endDate: Date) {
+    return this.bookingsRepository
+      .createQueryBuilder('b')
+      .select('b.id')
+      .where(`(b.startDate <= '${endDate}' and b.endDate >= '${startDate}')`)
+      .andWhere(`(b."roomId" = ${roomId})`)
+      .getQuery();
   }
 }

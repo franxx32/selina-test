@@ -12,40 +12,45 @@ export class RoomsService {
     private readonly roomsRepository: Repository<Rooms>,
   ) {}
 
-  // TODO : 1) Amount,
   async getAvailableRoom(
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
-    const unavailableRooms = (await this.getUnavailableRooms(
+    const unavailableRooms = await this.getUnavailableRooms(
       locationId,
       getAvailableRoomsDto,
-    )).map(room => room.type);
+    );
 
     return Object.keys(RoomTypes).filter(
       room => !unavailableRooms.includes(room),
     );
   }
 
-  private getUnavailableRooms(
+  private async getUnavailableRooms(
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
+    const query = this.getUnavailableRoomsQuery(
+      locationId,
+      getAvailableRoomsDto,
+    );
+    return (await getConnection().query(query)).map(room => room.type);
+  }
+
+  private getUnavailableRoomsQuery(
+    locationId: number,
+    getAvailableRoomsDto: GetAvailableRoomsDto,
+  ) {
+    const { startDate, endDate } = getAvailableRoomsDto;
     return getConnection()
       .createQueryBuilder(Bookings, 'b')
       .leftJoin('b.room', 'r')
       .select('r.type as type')
-      .where(
-        `(b.startDate <= :endDate and b.endDate >= :startDate) and r."locationId" = :locationId`,
-        {
-          locationId,
-          endDate: getAvailableRoomsDto.endDate,
-          startDate: getAvailableRoomsDto.startDate,
-        },
-      )
+      .where(`(b.startDate <= '${endDate}' and b.endDate >= '${startDate}')`)
+      .andWhere(`r."locationId" = ${locationId}`)
       .groupBy('r.id')
       .addGroupBy('r.type')
-      .having('count(b."roomId") > 0')
-      .getRawMany();
+      .having('count(b."roomId") > r.amount')
+      .getQuery();
   }
 }
