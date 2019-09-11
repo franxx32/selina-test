@@ -3,6 +3,7 @@ import { Repository, getManager } from 'typeorm';
 import { Bookings } from './bookings.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBookingDto } from './dto/createBooking.dto';
+import { Rooms } from 'src/rooms/rooms.entity';
 
 @Injectable()
 export class BookingsService {
@@ -36,9 +37,12 @@ export class BookingsService {
   private getFullRoomQuery(roomId: number, startDate: Date, endDate: Date) {
     return this.bookingsRepository
       .createQueryBuilder('b')
-      .select('b.id')
+      .leftJoinAndMapOne('b.room', Rooms, 'r', `r.id = ${roomId}`)
+      .select('count(b.id)')
       .where(`(b.startDate <= '${endDate}' and b.endDate >= '${startDate}')`)
       .andWhere(`(b."roomId" = ${roomId})`)
+      .groupBy('r.id')
+      .having('count(b.id) > r.amount')
       .getQuery();
   }
 }

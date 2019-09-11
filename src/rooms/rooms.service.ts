@@ -16,17 +16,15 @@ export class RoomsService {
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
-    const unavailableRooms = await this.getUnavailableRooms(
+    const availableRooms = await this.getAvailableRooms(
       locationId,
       getAvailableRoomsDto,
     );
 
-    return Object.keys(RoomTypes).filter(
-      room => !unavailableRooms.includes(room),
-    );
+    return availableRooms;
   }
 
-  private async getUnavailableRooms(
+  private async getAvailableRooms(
     locationId: number,
     getAvailableRoomsDto: GetAvailableRoomsDto,
   ) {
@@ -34,7 +32,14 @@ export class RoomsService {
       locationId,
       getAvailableRoomsDto,
     );
-    return (await getConnection().query(query)).map(room => room.type);
+    const unavailableRoomIds = await getConnection().query(query);
+    const locationRooms = await this.roomsRepository.find({
+      location: locationId,
+    });
+
+    return locationRooms.filter(
+      room => !unavailableRoomIds.some(r => r.id === room.id),
+    );
   }
 
   private getUnavailableRoomsQuery(
@@ -45,7 +50,7 @@ export class RoomsService {
     return getConnection()
       .createQueryBuilder(Bookings, 'b')
       .leftJoin('b.room', 'r')
-      .select('r.type as type')
+      .select('r.id as id')
       .where(`(b.startDate <= '${endDate}' and b.endDate >= '${startDate}')`)
       .andWhere(`r."locationId" = ${locationId}`)
       .groupBy('r.id')

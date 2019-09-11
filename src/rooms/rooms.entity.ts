@@ -24,8 +24,11 @@ export class Rooms {
   @Column({ default: 10 })
   amount: number;
 
+  @Column()
+  price: number;
+
   @ManyToOne(type => Locations, location => location.rooms)
-  location: Locations;
+  location: number;
 
   @OneToMany(type => Bookings, booking => booking.id)
   bookings: Bookings[];
